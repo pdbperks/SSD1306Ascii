@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the Arduino SSD1306Ascii Library.  If not, see
  * <http://www.gnu.org/licenses/>.
+ * displayFlip, progressBar and writeBitmap additions by pdbperks 2020
  */
 #include "SSD1306Ascii.h"
 //------------------------------------------------------------------------------
@@ -381,3 +382,62 @@ size_t SSD1306Ascii::write(uint8_t ch) {
   setRow(srow);
   return 1;
 }
+
+//--------------------------------------------------------
+void SSD1306Ascii::setDisplayFlip(bool left, bool down) {
+	ssd1306WriteCmd(left ? SSD1306_SEGREMAP : 0xA1); //0xA1 SSD1306_SEGREMAP_127
+	ssd1306WriteCmd(down ? SSD1306_COMSCANINC : SSD1306_COMSCANDEC);
+}
+ /** @brief write a progressbar to the display, Width is (PRG_MAX_SCALE + 2) pixels
+ *  @param uint8_t page begin page   (0..MAX_PAGE) (0,1,2,3,4,5,6,7)
+ *  @param uint8_t col  begin column (0..MAX_COL)
+ *  @param int percentage value      (0..100)
+*/
+#define PRG_MAX_SCALE     50
+#define PRG_LEFT_EDGE   0xFF
+#define PRG_RIGHT_EDGE  0xFF
+//#define PRG_ACTIVE      0xFF
+#define PRG_ACTIVE      0xBD
+#define PRG_NOT_ACTIVE  0x81
+
+
+void SSD1306Ascii::writeProgressBar( uint8_t col, uint8_t page , int percentage) {
+  uint8_t scale_value;
+    if (percentage <= 0) {
+    scale_value = 0;
+  } else if (percentage >= 100) {
+      scale_value = PRG_MAX_SCALE - 1;
+  }
+  else {
+    scale_value = (percentage * PRG_MAX_SCALE) / 100; 
+  }    
+  setCursor(col, page); 
+    writeDisplay(PRG_LEFT_EDGE,SSD1306_MODE_RAM);  	
+     for (uint8_t col = 0; col < scale_value; col++) {
+      writeDisplay(PRG_ACTIVE,SSD1306_MODE_RAM);
+        }       
+       writeDisplay(PRG_ACTIVE,SSD1306_MODE_RAM);
+   for (uint8_t col = (scale_value+1); col < PRG_MAX_SCALE; col++) {
+       writeDisplay(PRG_NOT_ACTIVE,SSD1306_MODE_RAM);
+  }
+         writeDisplay(PRG_RIGHT_EDGE,SSD1306_MODE_RAM);  //sendData(PRG_RIGHT_EDGE);  
+}
+
+//------------------------------------------------------------------------------
+void SSD1306Ascii::writeBitmap(uint8_t* bitmap, uint8_t c0, uint8_t c1, uint8_t r0, uint8_t r1) {
+  // Cancel skip character pixels.
+  m_skip = 0;
+
+  // Insure only rows on display will be cleared.
+  if (r1 >= displayRows()) r1 = displayRows() - 1;
+
+  for (uint8_t r = r0; r <= r1; r++) {
+    setCursor(c0, r);
+    for (uint8_t c = c0; c <= c1; c++) {
+      // Insure clear() writes zero. result is (m_invertMask^m_invertMask).
+      ssd1306WriteRamBuf(bitmap[(r*c1)+c]);
+    }
+  }
+  setCursor(c0, r0);
+}
+
