@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the Arduino SSD1306Ascii Library.  If not, see
  * <http://www.gnu.org/licenses/>.
- * displayFlip, progressBar and writeBitmap additions by pdbperks 2020
  */
 #include "SSD1306Ascii.h"
 //------------------------------------------------------------------------------
@@ -430,12 +429,12 @@ void SSD1306Ascii::writeBitmap(uint8_t* bitmap, uint8_t c0, uint8_t c1, uint8_t 
 
   // Insure only rows on display will be cleared.
   if (r1 >= displayRows()) r1 = displayRows() - 1;
-
+int bit = 0;
   for (uint8_t r = r0; r <= r1; r++) {
     setCursor(c0, r);
     for (uint8_t c = c0; c <= c1; c++) {
-      // Insure clear() writes zero. result is (m_invertMask^m_invertMask).
-      ssd1306WriteRamBuf(bitmap[(r*c1)+c]);
+      ssd1306WriteRamBuf(bitmap[bit]);             //(bitmap[((r-r0)*(c1-c0))+(c-c0)]);
+      bit++;
     }
   }
   setCursor(c0, r0);
