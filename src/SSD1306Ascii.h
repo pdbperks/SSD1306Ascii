@@ -307,6 +307,18 @@ class SSD1306Ascii : public Print {
    * @param[in] invert Inverted display if true or normal display if false.
    */
   void invertDisplay(bool invert);
+   /**
+   * flip screen 
+   */ 
+  void setDisplayFlip(bool left, bool down);
+  /**
+   * create a progress bar
+   */  
+  void writeProgressBar( uint8_t col, uint8_t page,  int percentage);
+  /**
+   * display a bitmap
+   */ 
+  void writeBitmap(uint8_t* bitmap, uint8_t c0, uint8_t c1, uint8_t r0, uint8_t r1);
   /**
    * @return invert mode.
    */
@@ -474,4 +486,6 @@ class SSD1306Ascii : public Print {
   uint8_t m_invertMask = 0;  // font invert mask
   uint8_t m_magFactor = 1;   // Magnification factor.
 };
+
+
 #endif  // SSD1306Ascii_h
