@@ -1,3 +1,4 @@
+This fork adds setDisplayFlip, writeProgressBar and writeBitmap features. Demo in examples/bitmap  
 Note: Version 1.2.x has several new examples and many changes/new features.
 
 SSD1306Ascii is an unbuffered character only library for small OLED
