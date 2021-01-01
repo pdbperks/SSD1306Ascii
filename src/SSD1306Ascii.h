@@ -307,10 +307,6 @@ class SSD1306Ascii : public Print {
    * @param[in] invert Inverted display if true or normal display if false.
    */
   void invertDisplay(bool invert);
-   /**
-   * flip screen 
-   */ 
-  void setDisplayFlip(bool left, bool down);
   /**
    * create a progress bar
    */  
