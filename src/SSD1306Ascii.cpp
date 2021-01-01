@@ -382,16 +382,7 @@ size_t SSD1306Ascii::write(uint8_t ch) {
   return 1;
 }
 
-//--------------------------------------------------------
-void SSD1306Ascii::setDisplayFlip(bool left, bool down) {
-	ssd1306WriteCmd(left ? SSD1306_SEGREMAP : 0xA1); //0xA1 SSD1306_SEGREMAP_127
-	ssd1306WriteCmd(down ? SSD1306_COMSCANINC : SSD1306_COMSCANDEC);
-}
- /** @brief write a progressbar to the display, Width is (PRG_MAX_SCALE + 2) pixels
- *  @param uint8_t page begin page   (0..MAX_PAGE) (0,1,2,3,4,5,6,7)
- *  @param uint8_t col  begin column (0..MAX_COL)
- *  @param int percentage value      (0..100)
-*/
+
 #define PRG_MAX_SCALE     50
 #define PRG_LEFT_EDGE   0xFF
 #define PRG_RIGHT_EDGE  0xFF
