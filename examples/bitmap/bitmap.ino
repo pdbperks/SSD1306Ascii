@@ -29,8 +29,8 @@ bool delayRunning = false; // true if still waiting for delay to finish
 int cursorY;
 
 void setup(void) {
-  //Wire.begin();
-  Wire.begin(0,2);//0 as SDA and 2 as SCL 
+  Wire.begin();
+  //Wire.begin(0,2);    //   (D3)0 as SDA and (D4)2 as SCL - use for NodeMCU pins 
   Serial.begin(115200);
 #if RST_PIN >= 0
   display.begin(&Adafruit128x64, I2C_ADDRESS, RST_PIN);
